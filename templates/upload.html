@@ -58,13 +58,20 @@
     <div id="app">
       <label for="upload">Select File: </label>
       <input id="upload" type="file" />
-      <button onClick="uploadFile()">Upload</button>
+      <button onClick="uploadFile(event)">Upload</button>
     </div>
   </div>
 
   <script>
-    function uploadFile() {
-      alert('upload called');
+    async function uploadFile(e) {
+      let formData = new FormData();
+      const fileupload = document.getElementById('upload')
+      formData.append(fileupload.files[0].name, fileupload.files[0]);
+      await fetch('/upload', {
+        method: "POST",
+        body: formData
+      });
+      alert('The file has been uploaded successfully.');
     }
   </script>
 </body>

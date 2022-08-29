@@ -1,7 +1,10 @@
 const express = require('express');
 const path = require('path');
-const app = express()
-const port = 5500; 
+const busboy = require('busboy');
+const fs = require('fs');
+
+const app = express();
+const port = 5500;
 
 const options = {
   root: path.join(__dirname, ''),
@@ -12,7 +15,24 @@ const options = {
   },
 };
 
-app.get('/upload', (req, res) => res.sendFile('/templates/upload.html', options))
+app.get('/upload', (req, res) => res.sendFile('/templates/upload.html', options));
+
+app.post('/upload', (req, res) => {
+  const bb = busboy({ headers: req.headers });
+  bb.on('file', (name, file, info) => {
+    const saveTo = path.join(__dirname, 'assets', 'images', name);
+    file.pipe(fs.createWriteStream(saveTo));
+  });
+  bb.on('close', () => {
+    res.writeHead(200, { 'Connection': 'close' });
+    res.end(`That's all folks!`);
+  });
+  bb.on('error', (error) => {
+    console.log('error in uploading file -> ', error);
+  });
+  req.pipe(bb);
+  return;
+});
 
 app.get('/init', (req, res) => {
   res.sendFile('/canvases/init.html', options);
