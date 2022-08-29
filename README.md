@@ -24,3 +24,5 @@ Open localhost:5500 to view the app working.
 1- /
 
 2- /init
+
+3- /upload to open the page for uploading images.
