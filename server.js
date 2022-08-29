@@ -12,6 +12,8 @@ const options = {
   },
 };
 
+app.get('/upload', (req, res) => res.sendFile('/templates/upload.html', options))
+
 app.get('/init', (req, res) => {
   res.sendFile('/canvases/init.html', options);
 });
