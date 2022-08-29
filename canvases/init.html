@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+  <canvas id="c"></canvas>
+</body>
+<script>
+  let camera, scene, renderer; 
+  function main() {
+    const canvas = document.getElementById('c');
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, }); //  WebGLRenderer that uses WebGL to render 3D to the canvas.
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const fov = 75;
+    const aspect = window.innerWidth / window.innerHeight;  // the canvas default
+    const near = 0.1;
+    const far = 5;
+    camera = new THREE.PerspectiveCamera(fov, aspect, near, far);//Those four settings define a "frustum" frustum is the name of a 3d shape that is like a pyramid with the tip sliced off. In other words think of the word "frustum" as another 3D shape like sphere, cube, prism, frustum.
+    camera.position.z = 3;
+
+    //A Scene in three.js is the root of a form of scene graph. Anything you want three.js to draw needs to be added to the scene
+    scene = new THREE.Scene();
+
+    //Next up we create a BoxGeometry which contains the data for a box. Almost anything we want to display in Three.js needs geometry which defines the vertices that make up our 3D object.
+    const boxWidth = 1;
+    const boxHeight = 1;
+    const boxDepth = 1;
+    const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+
+    //We then create a basic material and set its color
+    // const material = new THREE.MeshBasicMaterial({ color: 0x44aa88 });
+
+    const material = new THREE.MeshPhongMaterial({color: 0x44aa88}); 
+
+    //We also need to change the material. The MeshBasicMaterial is not affected by lights. Let's change it to a MeshPhongMaterial which is affected by lights.
+
+    /**
+     * A Mesh in three.js represents the combination of a three things
+          - A Geometry (the shape of the object)
+          - A Material (how to draw the object, shiny or flat, what color, what texture(s) to apply. Etc.)
+          - The position, orientation, and scale of that object in the scene relative to its parent. In the code below that parent is the scene.
+     **/
+    const cube = new THREE.Mesh(geometry, material);
+
+    //And finally we add that mesh to the scene
+    scene.add(cube);
+
+    //It's a little better but it's still hard to see the 3d. What would help is to add some lighting so let's add a light. 
+    const color = 0xFFFFFF;
+    const intensity = 1;
+    const light = new THREE.DirectionalLight(color, intensity);
+    light.position.set(-1, 2, 4);
+    scene.add(light);
+
+    //We can then render the scene by calling the renderer's render function and passing it the scene and the camera
+    // renderer.render(scene, camera); // now animation is going on
+
+    /**
+     * It's kind of hard to tell that is a 3D cube since we're viewing it directly down the -Z axis and the cube itself is axis aligned so we're only seeing a single face.
+     * Let's animate it spinning and hopefully that will make it clear it's being drawn in 3D. To animate it we'll render inside a render loop using requestAnimationFrame.
+    **/
+    function render(time) {
+      time *= 0.001;  // convert time to seconds
+
+      cube.rotation.x = time;
+      cube.rotation.y = time;
+
+      renderer.render(scene, camera);
+
+      requestAnimationFrame(render);
+    }
+    render();
+  }
+  function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+  
+  window.addEventListener('resize', onWindowResize);
+  main();
+</script>
+<html
