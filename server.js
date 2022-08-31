@@ -1,9 +1,14 @@
 const express = require('express');
+const app = express();
+
 const path = require('path');
 const busboy = require('busboy');
 const fs = require('fs');
+var bodyParser = require('body-parser');
 
-const app = express();
+var multer = require('multer');
+var upload = multer();
+
 const port = 5500;
 
 const options = {
@@ -15,13 +20,22 @@ const options = {
   },
 };
 
+let currentTourName = '';
+
 app.get('/upload', (req, res) => res.sendFile('/templates/upload.html', options));
 
 app.post('/upload', (req, res) => {
   const bb = busboy({ headers: req.headers });
   bb.on('file', (name, file, info) => {
-    const saveTo = path.join(__dirname, 'assets', 'images', name);
+    const saveTo = path.join(__dirname, 'assets', 'images', currentTourName, name);
     file.pipe(fs.createWriteStream(saveTo));
+  });
+  bb.on('field', (name, val, info) => {
+    var dir = `./assets/images/${val}`;
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+      currentTourName = val;
+    }
   });
   bb.on('close', () => {
     res.writeHead(200, { 'Connection': 'close' });
