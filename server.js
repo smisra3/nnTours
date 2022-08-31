@@ -21,21 +21,32 @@ const options = {
 };
 
 let currentTourName = '';
+let currentRoomType = '';
 
 app.get('/upload', (req, res) => res.sendFile('/templates/upload.html', options));
 
 app.post('/upload', (req, res) => {
   const bb = busboy({ headers: req.headers });
   bb.on('file', (name, file, info) => {
-    const saveTo = path.join(__dirname, 'assets', 'images', currentTourName, name);
+    const saveTo = path.join(__dirname, 'assets', 'images', currentTourName, currentRoomType, name);
     file.pipe(fs.createWriteStream(saveTo));
   });
   bb.on('field', (name, val, info) => {
     var dir = `./assets/images/${val}`;
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir);
-      currentTourName = val;
+    if (name === 'Tour Name') {
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+        currentTourName = val;
+      }
     }
+    if (name === 'Room type') {
+      var dir = `./assets/images/${currentTourName}/${val}`;
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+        currentRoomType = val;
+      }
+    }
+    
   });
   bb.on('close', () => {
     res.writeHead(200, { 'Connection': 'close' });

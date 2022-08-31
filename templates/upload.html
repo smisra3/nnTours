@@ -25,6 +25,7 @@
     label {
       margin-top: 100px;
       margin-right: 20px;
+      margin-left: -54px;
     }
 
     button {
@@ -53,7 +54,12 @@
 
     #name {
       margin: 20px;
+      margin-left: 0;
       display: block;
+    }
+    .room-type {
+      text-align: left;
+      margin-bottom: 40px;
     }
   </style>
 </head>
@@ -62,6 +68,16 @@
   <div>
     <div id="app">
       <input id="name" type="text" placeholder="Enter Tour name" />
+      <div class="room-type">
+        <span>Select room type</span>
+        <select id="room-type">
+          <option>Bedroom 1</option>
+          <option>Bedroom 2</option>
+          <option>Kitchen</option>
+          <option>Dining</option>
+          <option>Drawing Room</option>
+        </select>
+      </div>
       <label for="upload">Select File: </label>
       <input id="upload" type="file" />
       <button onClick="uploadFile(event)">Upload</button>
@@ -73,8 +89,10 @@
       let formData = new FormData();
       const fileupload = document.getElementById('upload');
       const tourName = document.getElementById('name');
+      const roomType = document.getElementById('room-type');
 
       formData.append('Tour Name', tourName.value);
+      formData.append('Room type', roomType.value);
       formData.append(fileupload.files[0].name, fileupload.files[0]);
       await fetch('/upload', {
         method: "POST",
