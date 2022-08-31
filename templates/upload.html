@@ -7,6 +7,7 @@
     body {
       background-color: hsla(0, 0%, 100%, 0.925);
     }
+
     label,
     button {
       font-size: 20px;
@@ -57,6 +58,7 @@
       margin-left: 0;
       display: block;
     }
+
     .room-type {
       text-align: left;
       margin-bottom: 40px;
@@ -76,10 +78,12 @@
           <option>Kitchen</option>
           <option>Dining</option>
           <option>Drawing Room</option>
+          <option>Study</option>
+          <option>Entrance</option>
         </select>
       </div>
       <label for="upload">Select File: </label>
-      <input id="upload" type="file" />
+      <input multiple id="upload" type="file" />
       <button onClick="uploadFile(event)">Upload</button>
     </div>
   </div>
@@ -93,7 +97,9 @@
 
       formData.append('Tour Name', tourName.value);
       formData.append('Room type', roomType.value);
-      formData.append(fileupload.files[0].name, fileupload.files[0]);
+      for (let file = 0; file < fileupload.files.length; file += 1) {
+        formData.append(fileupload.files[file].name, fileupload.files[file]);
+      }
       await fetch('/upload', {
         method: "POST",
         body: formData
