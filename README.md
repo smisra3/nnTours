@@ -19,6 +19,46 @@
 
 Open localhost:5500 to view the app working.
 
+# Next steps:
+
+1- image editiing modal which will have hotspot addition
+
+2- Hotspot linking
+
+3- Runtime tour generation
+
+# every tour to have a config.json file generated to capture all the required info for tour generation platform
+
+{
+    "metaInfo": {
+        "Dining": {
+            "hotspot": "",
+            "images": [
+                "http://localhost:9988/posx.jpg",
+                "http://localhost:9988/negx.jpg",
+                "http://localhost:9988/posy.jpg",
+                "http://localhost:9988/negy.jpg",
+                "http://localhost:9988/posz.jpg",
+                "http://localhost:9988/negz.jpg"
+            ]
+        },
+        "entrance": {
+            "hotspot": "Dining",
+            "images": [
+                "http://localhost:9988/posx.jpg",
+                "http://localhost:9988/negx.jpg",
+                "http://localhost:9988/posy.jpg",
+                "http://localhost:9988/negy.jpg",
+                "http://localhost:9988/posz.jpg",
+                "http://localhost:9988/negz.jpg"
+            ]
+        }
+    },
+    "tourStart": {
+        "tagName": "entrance"
+    }
+}
+
 # Routes
 
 1- /
