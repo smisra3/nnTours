@@ -30,6 +30,28 @@ app.post('/upload', (req, res) => {
   bb.on('file', (name, file, info) => {
     const saveTo = path.join(__dirname, 'assets', 'images', currentTourName, currentRoomType, name);
     file.pipe(fs.createWriteStream(saveTo));
+
+    const dir = `./assets/images/${currentTourName}/config.json`;
+    if (!fs.existsSync(dir)) {
+      fs.writeFileSync(dir, JSON.stringify({ tourName: currentTourName, }));
+    }
+
+    fs.readFile(dir, 'utf8', function readFileCallback(err, data) {
+      if (err) {
+        console.log(err);
+      } else {
+        let obj = JSON.parse(data); //now it an object
+        obj = {
+          ...obj,
+          metaInfo: {
+            ...(obj.metaInfo || {}),
+            [currentRoomType]: { hotspot: '', images: '', },
+          }
+        };
+        json = JSON.stringify(obj); //convert it back to json
+        fs.writeFileSync(dir, json, 'utf8'); // write it back 
+      }
+    });
   });
   bb.on('field', (name, val, info) => {
     var dir = `./assets/images/${val}`;
@@ -46,7 +68,6 @@ app.post('/upload', (req, res) => {
         currentRoomType = val;
       }
     }
-    
   });
   bb.on('close', () => {
     res.writeHead(200, { 'Connection': 'close' });
