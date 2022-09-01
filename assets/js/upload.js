@@ -17,5 +17,13 @@ async function uploadFile(e) {
         method: "POST",
         body: formData
     });
+
+    try {
+        let response = await fetch(`/tour/${tourName.value}`);
+        response = await response.json();
+    } catch (error) {
+        console.log(error);
+    }
+
     alert('The file has been uploaded successfully.');
 }

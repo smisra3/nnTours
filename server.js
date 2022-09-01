@@ -46,7 +46,12 @@ const options = {
 let currentTourName = '';
 let currentRoomType = '';
 
-app.get('/upload', (req, res) => res.sendFile('/templates/upload.html', options));
+app.get('/tour/:tourName', (req, res) => {
+  const dir = `./assets/images/${req.params.tourName}/config.json`;
+  return res.sendFile(dir, options);
+});
+
+app.get('/upload', (req, res) => res.sendFile('/templates/upload.html', options))
 
 app.post('/upload', (req, res) => {
   const bb = busboy({ headers: req.headers });
@@ -86,13 +91,16 @@ app.post('/upload', (req, res) => {
       updateConfig({ dir, tourStart: currentRoomType, currentRoomType, });
     }
   });
+
   bb.on('close', () => {
     res.writeHead(200, { 'Connection': 'close' });
     res.end(`That's all folks!`);
   });
+
   bb.on('error', (error) => {
     console.log('error in uploading file -> ', error);
   });
+
   req.pipe(bb);
   return;
 });
