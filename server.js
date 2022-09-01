@@ -11,6 +11,29 @@ var upload = multer();
 
 const port = 5500;
 
+const updateConfig = ({ dir, currentRoomType = '', tourStart = '', }) => {
+  fs.readFile(dir, 'utf8', function readFileCallback(err, data) {
+    if (err) {
+      console.log(err);
+    } else {
+      let obj = JSON.parse(data);
+      obj = {
+        ...(obj || {}),
+        metaInfo: {
+          ...(obj.metaInfo || {}),
+          [currentRoomType]: { hotspot: '', images: '', },
+        },
+        tourStart: {
+          ...(obj.tourStart || {}),
+          tagName: tourStart || (obj.tourStart || {}).tagName || '',
+        },
+      };
+      json = JSON.stringify(obj);
+      fs.writeFileSync(dir, json, 'utf8');
+    }
+  });
+};
+
 const options = {
   root: path.join(__dirname, ''),
   dotfiles: 'deny',
@@ -27,32 +50,17 @@ app.get('/upload', (req, res) => res.sendFile('/templates/upload.html', options)
 
 app.post('/upload', (req, res) => {
   const bb = busboy({ headers: req.headers });
+
   bb.on('file', (name, file, info) => {
     const saveTo = path.join(__dirname, 'assets', 'images', currentTourName, currentRoomType, name);
     file.pipe(fs.createWriteStream(saveTo));
-
     const dir = `./assets/images/${currentTourName}/config.json`;
     if (!fs.existsSync(dir)) {
       fs.writeFileSync(dir, JSON.stringify({ tourName: currentTourName, }));
     }
-
-    fs.readFile(dir, 'utf8', function readFileCallback(err, data) {
-      if (err) {
-        console.log(err);
-      } else {
-        let obj = JSON.parse(data); //now it an object
-        obj = {
-          ...obj,
-          metaInfo: {
-            ...(obj.metaInfo || {}),
-            [currentRoomType]: { hotspot: '', images: '', },
-          }
-        };
-        json = JSON.stringify(obj); //convert it back to json
-        fs.writeFileSync(dir, json, 'utf8'); // write it back 
-      }
-    });
+    updateConfig({ dir, currentRoomType, });
   });
+
   bb.on('field', (name, val, info) => {
     var dir = `./assets/images/${val}`;
     if (name === 'Tour Name') {
@@ -61,12 +69,21 @@ app.post('/upload', (req, res) => {
         currentTourName = val;
       }
     }
+
     if (name === 'Room type') {
       var dir = `./assets/images/${currentTourName}/${val}`;
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
         currentRoomType = val;
       }
+    }
+
+    if (name === 'Tour Start') {
+      const dir = `./assets/images/${currentTourName}/config.json`;
+      if (!fs.existsSync(dir)) {
+        fs.writeFileSync(dir, JSON.stringify({ tourName: currentTourName, }));
+      }
+      updateConfig({ dir, tourStart: currentRoomType, currentRoomType, });
     }
   });
   bb.on('close', () => {

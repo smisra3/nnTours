@@ -100,8 +100,14 @@
           <option>Entrance</option>
         </select>
       </div>
-      <label for="upload">Select File: </label>
-      <input multiple id="upload" type="file" />
+      <div style="margin: 20px 0">
+        <label for="upload">Select File: </label>
+        <input multiple id="upload" type="file" />
+        <label>
+          <input type="checkbox" id="default" />
+          <span>Start my tour from here</span>
+        </label>
+      </div>
       <button onClick="uploadFile(event)">Upload</button>
     </div>
   </div>
