@@ -24,6 +24,7 @@ async function uploadFile(e) {
 function createImageTags({ images = [], }) {
   const imgArray = [];
   const targetParent = document.getElementById('tour-images');
+  targetParent.innerHTML = '';
   for (let i = 0; i < images.length; i += 1) {
     const image = document.createElement('img');
     image.src = images[i];
