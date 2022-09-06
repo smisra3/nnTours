@@ -17,7 +17,7 @@ async function uploadFile(e) {
     method: "POST",
     body: formData
   });
-  // fetchImages();
+  fetchImages();
   alert('The file has been uploaded successfully.');
 }
 
