@@ -17,37 +17,30 @@ const updateConfig = ({
   tourStart = '',
   filename,
 }) => {
-  fs.readFile(dir, 'utf8', function readFileCallback(err, data) {
-    if (err) {
-      console.log(err);
-    } else {
-      let obj = JSON.parse(data);
-      obj = {
-        ...(obj || {}),
-        metaInfo: {
-          ...(obj.metaInfo || {}),
-          [currentRoomType]: {
-            hotspot: '',
-            images: [
-              ...(((obj.metaInfo || {})[currentRoomType] || {}).images || [])
-            ],
-          },
-        },
-        tourStart: {
-          ...(obj.tourStart || {}),
-          tagName: tourStart || (obj.tourStart || {}).tagName || '',
-        },
-      };
-      console.log('fileName is  - ', filename);
-      console.log('previous - ', ((obj.metaInfo || {})[currentRoomType] || {}).images);
-      if (filename && currentRoomType) {
-        obj.metaInfo[currentRoomType].images.push(`http://localhost:5500/${filename}`)
-      }
-      console.log('after - ', ((obj.metaInfo || {})[currentRoomType] || {}).images);
-      json = JSON.stringify(obj);
-      fs.writeFileSync(dir, json, 'utf8');
-    }
-  });
+  const data = fs.readFileSync(dir, 'utf8');
+  let obj = JSON.parse(data);
+  obj = {
+    ...(obj || {}),
+    metaInfo: {
+      ...(obj.metaInfo || {}),
+      [currentRoomType]: {
+        hotspot: '',
+        images: [
+          ...(((obj.metaInfo || {})[currentRoomType] || {}).images || [])
+        ],
+      },
+    },
+    tourStart: {
+      ...(obj.tourStart || {}),
+      tagName: tourStart || (obj.tourStart || {}).tagName || '',
+    },
+  };
+  if (filename && currentRoomType) {
+    obj.metaInfo[currentRoomType].images.push(`http://localhost:5500/${filename}`)
+  }
+  json = JSON.stringify(obj);
+  fs.writeFileSync(dir, json, 'utf8');
+  return true;
 };
 
 const options = {
