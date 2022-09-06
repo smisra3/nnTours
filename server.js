@@ -26,16 +26,24 @@ const updateConfig = ({
         ...(obj || {}),
         metaInfo: {
           ...(obj.metaInfo || {}),
-          [currentRoomType]: { hotspot: '', images: [], },
+          [currentRoomType]: {
+            hotspot: '',
+            images: [
+              ...(((obj.metaInfo || {})[currentRoomType] || {}).images || [])
+            ],
+          },
         },
         tourStart: {
           ...(obj.tourStart || {}),
           tagName: tourStart || (obj.tourStart || {}).tagName || '',
         },
       };
-      if (filename) {
+      console.log('fileName is  - ', filename);
+      console.log('previous - ', ((obj.metaInfo || {})[currentRoomType] || {}).images);
+      if (filename && currentRoomType) {
         obj.metaInfo[currentRoomType].images.push(`http://localhost:5500/${filename}`)
       }
+      console.log('after - ', ((obj.metaInfo || {})[currentRoomType] || {}).images);
       json = JSON.stringify(obj);
       fs.writeFileSync(dir, json, 'utf8');
     }
@@ -69,9 +77,12 @@ app.post('/upload', (req, res) => {
     const saveTo = path.join(__dirname, 'assets', 'images', currentTourName, currentRoomType, name);
     file.pipe(fs.createWriteStream(saveTo));
     const dir = `./assets/images/${currentTourName}/config.json`;
+    console.log('config file exists? -> ', fs.existsSync(dir));
     if (!fs.existsSync(dir)) {
+      console.log('creating config file for -> ', currentTourName);
       fs.writeFileSync(dir, JSON.stringify({ tourName: currentTourName, }));
     }
+    console.log('Now updating config with file name -> ', filename)
     updateConfig({ dir, currentRoomType, filename, });
   });
 
