@@ -11,7 +11,12 @@ var upload = multer();
 
 const port = 5500;
 
-const updateConfig = ({ dir, currentRoomType = '', tourStart = '', }) => {
+const updateConfig = ({
+  dir,
+  currentRoomType = '',
+  tourStart = '',
+  filename,
+}) => {
   fs.readFile(dir, 'utf8', function readFileCallback(err, data) {
     if (err) {
       console.log(err);
@@ -21,13 +26,16 @@ const updateConfig = ({ dir, currentRoomType = '', tourStart = '', }) => {
         ...(obj || {}),
         metaInfo: {
           ...(obj.metaInfo || {}),
-          [currentRoomType]: { hotspot: '', images: '', },
+          [currentRoomType]: { hotspot: '', images: [], },
         },
         tourStart: {
           ...(obj.tourStart || {}),
           tagName: tourStart || (obj.tourStart || {}).tagName || '',
         },
       };
+      if (filename) {
+        obj.metaInfo[currentRoomType].images.push(`http://localhost:5500/${filename}`)
+      }
       json = JSON.stringify(obj);
       fs.writeFileSync(dir, json, 'utf8');
     }
@@ -57,13 +65,14 @@ app.post('/upload', (req, res) => {
   const bb = busboy({ headers: req.headers });
 
   bb.on('file', (name, file, info) => {
+    const { filename, encoding, mimeType } = info;
     const saveTo = path.join(__dirname, 'assets', 'images', currentTourName, currentRoomType, name);
     file.pipe(fs.createWriteStream(saveTo));
     const dir = `./assets/images/${currentTourName}/config.json`;
     if (!fs.existsSync(dir)) {
       fs.writeFileSync(dir, JSON.stringify({ tourName: currentTourName, }));
     }
-    updateConfig({ dir, currentRoomType, });
+    updateConfig({ dir, currentRoomType, filename, });
   });
 
   bb.on('field', (name, val, info) => {
