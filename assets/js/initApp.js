@@ -2,6 +2,14 @@
 let scene, camera, renderer;
 var raycaster, mouse = { x: 0, y: 0 };
 let tweenOutside;
+const imageToRoomSideMapping = {
+  front: 0,
+  back: 1,
+  top: 2,
+  bottom: 3,
+  left: 4,
+  right: 5,
+}
 const porchImages = ['outdoor_posx.jpg', 'outdoor_negx.jpg', 'outdoor_posy.jpg', 'outdoor_negy.jpg', 'outdoor_posz.jpg', 'outdoor_negz.jpg'];
 const porchCloseUpImages = ['posx.jpg', 'negx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg'];
 
@@ -15,6 +23,22 @@ const progressUpdateHandler = {
   start: { time: 1, parmas: { opacity: 0, duration: 0.6, }, },
   justBeforeFinish: { time: 0.1, params: {}, },
   finish: { params: { delay: 0.3, opacity: 1, duration: 0.4, ease: Sine.easeInOut, }, },
+};
+
+const createHotspot = ({
+  color = '0xffffff',
+  position = { x: -999.999999999999, y: 0, z: 0, },
+  geometry,
+} = {}) => {
+  const sphere = new THREE.Mesh(
+    geometry,
+    new THREE.MeshBasicMaterial({
+      color,
+      side: THREE.BackSide,
+    }),
+  );
+  sphere.position.set(position.x, position.y, position.z);
+  return sphere;
 };
 
 const createNewMeshBasicMaterial = ({ images = [], }) => {
@@ -31,16 +55,7 @@ const createNewMeshBasicMaterial = ({ images = [], }) => {
 window.init = function initateView() {
 
   const raycaster = new THREE.Raycaster();
-  const pointer = new THREE.Vector2();
   const mouse = new THREE.Vector2();
-  const target = new THREE.Vector2();
-  const windowHalf = new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2);
-
-  // const onMouseMove = (event) => {
-  //   mouse.x = (event.clientX - windowHalf.x);
-  //   mouse.y = (event.clientY - windowHalf.x);
-  // };
-  // window.addEventListener('mousemove', onMouseMove, false);
 
   scene = new THREE.Scene;
   camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 45, 30000); //we need a camera. (fov, aspect, near, far)
@@ -58,21 +73,11 @@ window.init = function initateView() {
   controls.keyPanSpeed = 10;
 
   const geometry = new THREE.SphereBufferGeometry(100, 100, 100);
-  const sphere = new THREE.Mesh(
-    geometry,
-    new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      side: THREE.BackSide,
-    }),
-  );
-  sphere.position.set(-999.999999999999, 0, 0);
   let finalBox;
-  let canvas1To0Started = false;
-  let meshCreated = false;
-  let canvasOTo1Started = false;
 
   const assetsArray = createNewMeshBasicMaterial({ images: homeTourNextStep, });
   let boxGeometry2 = new THREE.BoxGeometry(8000, 8000, 8000);
+  const sphere = createHotspot({ geometry });
   finalBox = new THREE.Mesh(boxGeometry2, assetsArray, sphere);
 
   domEvents.addEventListener(sphere, 'click', event => {

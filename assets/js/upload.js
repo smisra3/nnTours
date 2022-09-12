@@ -38,13 +38,19 @@ function createImageTags({ images = [], tourMetaData = {}, }) {
     h1.append(innerDiv);
     targetParent.append(h1);
     const imageArray = tourMetaData[rooms[i]].images;
-    const domImageArray = [];
     for (let j = 0; j < imageArray.length; j += 1) {
       const image = document.createElement('img');
       image.src = imageArray[j];
       image.width = '100';
       image.height = '100';
-      domImageArray.push(image);
+      image.addEventListener('click', e => {
+        window.currentImage = {
+          src: imageArray[j],
+          roomName: rooms[i],
+          tourName: window.__tourData__.tourName,
+        };
+        window.openModal();
+      });
       innerDiv.append(image);
     }
   }
@@ -52,7 +58,7 @@ function createImageTags({ images = [], tourMetaData = {}, }) {
 }
 
 function displayData() {
-  createImageTags({  tourMetaData: window.__tourData__.metaInfo, });
+  createImageTags({ tourMetaData: window.__tourData__.metaInfo, });
   return true;
 }
 
