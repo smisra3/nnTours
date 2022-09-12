@@ -11,6 +11,9 @@ const imageToRoomSideMapping = {
   right: 5,
 }
 const { tourData = {}, } = window;
+const tourStartName = tourData.tourStart.tagName;
+const tourStartHotspot = tourData.metaInfo[tourStartName].hotspot;
+
 const porchImages = ['outdoor_posx.jpg', 'outdoor_negx.jpg', 'outdoor_posy.jpg', 'outdoor_negy.jpg', 'outdoor_posz.jpg', 'outdoor_negz.jpg'];
 const porchCloseUpImages = ['posx.jpg', 'negx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg'];
 
@@ -55,9 +58,6 @@ const createNewMeshBasicMaterial = ({ images = [], }) => {
 
 window.init = function initateView() {
 
-  const raycaster = new THREE.Raycaster();
-  const mouse = new THREE.Vector2();
-
   scene = new THREE.Scene;
   camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 45, 30000); //we need a camera. (fov, aspect, near, far)
   camera.position.set(3900, 1200, 50);
@@ -75,11 +75,7 @@ window.init = function initateView() {
 
   const geometry = new THREE.SphereBufferGeometry(100, 100, 100);
   let finalBox;
-
-  const assetsArray = createNewMeshBasicMaterial({ images: homeTourNextStep, });
-  let boxGeometry2 = new THREE.BoxGeometry(8000, 8000, 8000);
-  const sphere = createHotspot({ geometry });
-  finalBox = new THREE.Mesh(boxGeometry2, assetsArray, sphere);
+  const sphere = createHotspot({ geometry, position: { x: tourStartHotspot.x, y: tourStartHotspot.y, z: 0, } });
 
   domEvents.addEventListener(sphere, 'click', event => {
     const { point = {}, } = event.intersect || {};
@@ -112,6 +108,8 @@ window.init = function initateView() {
       onComplete: () => {
         gsap.to('canvas', { ...progressUpdateHandler.finish.params });
         scene.add(finalBox);
+        const hotspot = createHotspot({ geometry, position: { x: tourStartHotspot.x, y: tourStartHotspot.y, z: 0, } });
+        // scene.add(hotspot)
       },
     });
   });
