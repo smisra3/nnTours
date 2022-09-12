@@ -21,28 +21,39 @@ async function uploadFile(e) {
   alert('The file has been uploaded successfully.');
 }
 
-function createImageTags({ images = [], }) {
+function createImageTags({ images = [], tourMetaData = {}, }) {
   const imgArray = [];
   const targetParent = document.getElementById('tour-images');
+
+  const rooms = Object.keys(tourMetaData || []);
+  const roomCount = rooms.length;
+
   targetParent.innerHTML = '';
-  for (let i = 0; i < images.length; i += 1) {
-    const image = document.createElement('img');
-    image.src = images[i];
-    image.width = '100';
-    image.height = '100';
-    imgArray.push(image);
-    targetParent.append(image);
+
+  for (let i = 0; i < roomCount; i += 1) {
+    const h1 = document.createElement('h1');
+    const innerDiv = document.createElement('div');
+    innerDiv.style = "display: flex;";
+    h1.innerHTML = `<span>${rooms[i]}</span>`;
+    h1.append(innerDiv);
+    targetParent.append(h1);
+    const imageArray = tourMetaData[rooms[i]].images;
+    const domImageArray = [];
+    for (let j = 0; j < imageArray.length; j += 1) {
+      const image = document.createElement('img');
+      image.src = imageArray[j];
+      image.width = '100';
+      image.height = '100';
+      domImageArray.push(image);
+      innerDiv.append(image);
+    }
   }
+  return true;
 }
 
 function displayData() {
-  const tourMetaData = window.__tourData__.metaInfo;
-  const universalImageArray = [];
-  Object.keys(tourMetaData).map(item => {
-    const { images = [], } = (tourMetaData || {})[item] || {};
-    universalImageArray.push(...(images || []));
-  });
-  createImageTags({ images: universalImageArray, });
+  createImageTags({  tourMetaData: window.__tourData__.metaInfo, });
+  return true;
 }
 
 async function fetchImages() {
