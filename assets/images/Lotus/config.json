@@ -1,0 +1,37 @@
+{
+    "tourName": "Lotus",
+    "metaInfo": {
+        "Bedroom 1": {
+            "hotspot": {
+                "x": "131.796875",
+                "y": "415.59375",
+                "name": "Entrance"
+            },
+            "images": [
+                "http://localhost:5500/4-negx.jpg",
+                "http://localhost:5500/4-negy.jpg",
+                "http://localhost:5500/4-negz.jpg",
+                "http://localhost:5500/4-posx.jpg",
+                "http://localhost:5500/4-posy.jpg",
+                "http://localhost:5500/4-posz.jpg"
+            ]
+        },
+        "Entrance": {
+            "hotspot": "",
+            "images": [
+                "http://localhost:5500/3-posy.jpeg",
+                "http://localhost:5500/3-negy.jpeg",
+                "http://localhost:5500/3-posz.jpeg",
+                "http://localhost:5500/3-negz.jpeg",
+                "http://localhost:5500/3-posx.jpeg",
+                "http://localhost:5500/3-negx.jpeg"
+            ]
+        },
+        "": {
+            "images": []
+        }
+    },
+    "tourStart": {
+        "tagName": "Bedroom 1"
+    }
+}

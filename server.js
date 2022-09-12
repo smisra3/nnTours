@@ -62,6 +62,10 @@ const options = {
 let currentTourName = '';
 let currentRoomType = '';
 
+app.get('/start/tour/:tourName', (req, res) => {
+  res.sendFile('/canvases/tour.html', options);
+});
+
 app.get('/tour/:tourName', (req, res) => {
   const dir = `./assets/images/${req.params.tourName}/config.json`;
   return res.sendFile(dir, options);

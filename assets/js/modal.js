@@ -24,6 +24,7 @@ const openEditor = () => {
   submit.onclick = async e => {
     const name = document.getElementById('linkTo').value;
     const res = await fetch(`/hotspot?roomName=${roomName}&x=${window.dropPosition.x}&y=${window.dropPosition.y}&name=${name}&tourName=${window.__tourData__.tourName}`);
+    window.location = `/start/tour/${window.__tourData__.tourName}`;
   };
 
 
