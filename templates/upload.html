@@ -7,12 +7,14 @@
     h5 {
       margin: 5px;
     }
+
     .hotspot {
       border-radius: 50px;
       width: 20px;
       height: 20px;
       background-color: black;
     }
+
     .modal {
       display: none;
       /* Hidden by default */
@@ -48,9 +50,11 @@
     /* The Close Button */
     .close {
       color: #aaaaaa;
-      float: right;
       font-size: 28px;
       font-weight: bold;
+      right: 124px;
+      top: 59px;
+      position: absolute;
     }
 
     .close:hover,
@@ -148,7 +152,7 @@
     }
   </style>
   <script src="/js/upload.js" defer></script>
-  <script src="/js/modal.js" defer ></script>
+  <script src="/js/modal.js" defer></script>
 </head>
 
 <body>
@@ -191,8 +195,8 @@
 
   <!-- Modal to open the editor inside -->
   <div id="myModal" class="modal">
+    <span class="close">&times;</span>
     <div id="modal-content" class="modal-content">
-      <span class="close">&times;</span>
     </div>
   </div>
 </body>
