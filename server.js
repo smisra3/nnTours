@@ -43,7 +43,7 @@ const updateConfig = ({
     }
   }
   if (filename && currentRoomType) {
-    obj.metaInfo[currentRoomType].images.push(`http://localhost:5500/${filename}`)
+    obj.metaInfo[currentRoomType].images.push(`http://localhost:5500/img/${currentTourName}/${currentRoomType}/${filename}`)
   }
   json = JSON.stringify(obj);
   fs.writeFileSync(dir, json, 'utf8');
@@ -146,6 +146,10 @@ app.get('/simple-room', (req, res) => {
 
 app.get('/js/:name', (req, res) => {
   res.sendFile(`/assets/js/${req.params.name}`, options);
+});
+
+app.get('/img/:tourName/:roomName/:name', (req, res) => {
+  res.sendFile(`/assets/images/${req.params.tourName}/${req.params.roomName}/${req.params.name}`, options);
 });
 
 app.get('/:name', (req, res) => {
