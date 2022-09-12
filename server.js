@@ -16,6 +16,7 @@ const updateConfig = ({
   currentRoomType = '',
   tourStart = '',
   filename,
+  hotspot,
 }) => {
   const data = fs.readFileSync(dir, 'utf8');
   let obj = JSON.parse(data);
@@ -24,7 +25,6 @@ const updateConfig = ({
     metaInfo: {
       ...(obj.metaInfo || {}),
       [currentRoomType]: {
-        hotspot: '',
         images: [
           ...(((obj.metaInfo || {})[currentRoomType] || {}).images || [])
         ],
@@ -35,6 +35,13 @@ const updateConfig = ({
       tagName: tourStart || (obj.tourStart || {}).tagName || '',
     },
   };
+  if (hotspot) {
+    obj.metaInfo[hotspot.roomName].hotspot = {
+      x: hotspot.x,
+      y: hotspot.y,
+      name: hotspot.name,
+    }
+  }
   if (filename && currentRoomType) {
     obj.metaInfo[currentRoomType].images.push(`http://localhost:5500/${filename}`)
   }
@@ -58,6 +65,13 @@ let currentRoomType = '';
 app.get('/tour/:tourName', (req, res) => {
   const dir = `./assets/images/${req.params.tourName}/config.json`;
   return res.sendFile(dir, options);
+});
+
+app.get('/hotspot', (req, res) => {
+  const { roomName, tourName, x, y, name } = req.query;
+  var dir = `./assets/images/${tourName}/config.json`;
+  updateConfig({ dir, hotspot: { x, y, name, roomName, tourName, } });
+  res.send('ok');
 });
 
 app.get('/upload', (req, res) => res.sendFile('/templates/upload.html', options))

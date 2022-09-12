@@ -15,6 +15,18 @@ const openEditor = () => {
   const h3 = document.createElement('h3');
   h3.innerHTML = `Room name: ${roomName}`;
 
+  const input = document.createElement('input');
+  input.id = 'linkTo';
+  input.placeholder = 'Enter the room name';
+
+  const submit = document.createElement('button');
+  submit.innerHTML = 'Submit';
+  submit.onclick = async e => {
+    const name = document.getElementById('linkTo').value;
+    const res = await fetch(`/hotspot?roomName=${roomName}&x=${window.dropPosition.x}&y=${window.dropPosition.y}&name=${name}&tourName=${window.__tourData__.tourName}`);
+  };
+
+
   const img = document.createElement('div');
   img.style.background = `url(${src}) no-repeat`;
   img.style.backgroundSize = 'contain';
@@ -49,7 +61,9 @@ const openEditor = () => {
   modalContent.append(h1);
   modalContent.append(h3);
   modalContent.append(img);
+  modalContent.append(input);
   modalContent.append(hotspotWrapper);
+  modalContent.append(submit);
 };
 
 window.openModal = ({ action = 'imageEditor', } = {}) => {
