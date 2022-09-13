@@ -1,4 +1,4 @@
-const loadInitScript = (scripts) => {
+const loadScripts = (scripts) => {
   for (let i = 0; i < scripts.length; i += 1) {
     const script = document.createElement('script');
     script.defer = 'defer';
@@ -12,7 +12,7 @@ async function getMetaInfo() {
   const res = await fetch(`/tour/${tourName}`);
   const data = await res.json();
   window.tourData = data;
-  loadInitScript([
+  loadScripts([
     '/js/tourUtils.js',
     '/js/boot.js',
   ]);

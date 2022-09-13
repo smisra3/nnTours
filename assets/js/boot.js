@@ -4,8 +4,6 @@ const progressUpdateHandler = {
   finish: { params: { delay: 0.3, opacity: 1, duration: 0.4, ease: Sine.easeInOut, }, },
 };
 const { tourData = {}, } = window;
-const tourStartName = tourData.tourStart.tagName;
-const tourStartHotspot = tourData.metaInfo[tourStartName].hotspot;
 
 // At the boot time, currentCube will contain the value of entry point of the app. After that, as user will
 // navigate to other cubes, and currentCube value will be updated accordingly.
@@ -35,9 +33,7 @@ const handleHotspotClick = (event, { camera, scene, hotspot, }) => {
     onUpdate: () => {
       // Tour next stop images uploaded here
       const images = [...nextCube.images];
-      const hotspot = { ...nextCube.hotspot, };
       const progress = tweenOutside.progress();
-
       if (progress >= 0.1) gsap.to('canvas', { ...progressUpdateHandler.start.parmas, });
       if (progress >= 0.1 && progress <= 0.2) finalBox = createMesh({ images })
       if (progress > 0.6) gsap.to('canvas', { delay: 0.3, opacity: 1, duration: 0.4, ease: Sine.easeInOut, },);
@@ -88,10 +84,12 @@ function bootApp() {
   // for new renders follow process: 
   // 1- Update current and next cube window variables
   // 2- call initApp
+
+  const tourStartName = window.tourData.tourStart.tagName;
   window.currentCube = {
     ...(window.currentCube || {}),
-    name: ((window.tourData || {}).tourStart || {}).tagName || '',
-    hotspot: tourStartHotspot,
+    name: tourStartName,
+    hotspot: tourData.metaInfo[tourStartName].hotspot,
     images: (((window.tourData || {}).metaInfo || {})[tourStartName] || {}).images || [],
   };
   const nextCubeName = (window.currentCube.hotspot || {}).name || '';
