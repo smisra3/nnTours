@@ -10,17 +10,6 @@ const { tourData = {}, } = window;
 window.currentCube = {};
 window.nextCube = {};
 
-const updateCurrentAndNextCubes = () => {
-  window.currentCube = { ...window.nextCube, };
-  const nextCubeName = (window.currentCube.hotspot || {}).name || '';
-  window.nextCube = {
-    ...window.nextCube,
-    name: (window.currentCube.hotspot || {}).name || '',
-    hotspot: (tourData.metaInfo[nextCubeName] || {}).hotspot || {},
-    images: (tourData.metaInfo[nextCubeName] || {}).images || [],
-  };
-};
-
 const handleHotspotClick = (event, { camera, scene, hotspot, }) => {
   let finalBox;
   const { point = {}, } = event.intersect || {};
@@ -39,7 +28,7 @@ const handleHotspotClick = (event, { camera, scene, hotspot, }) => {
       if (progress > 0.6) gsap.to('canvas', { delay: 0.3, opacity: 1, duration: 0.4, ease: Sine.easeInOut, },);
     },
     onComplete: () => {
-      updateCurrentAndNextCubes();
+      window.updateCurrentAndNextCubes();
       gsap.to('canvas', { ...progressUpdateHandler.finish.params });
       scene.add(finalBox);
     },

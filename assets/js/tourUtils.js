@@ -72,3 +72,14 @@ window.createMesh = ({ images = [], }) => {
   let boxGeometry = new THREE.BoxGeometry(8000, 8000, 8000);
   return new THREE.Mesh(boxGeometry, assetArray);
 };
+
+window.updateCurrentAndNextCubes = () => {
+  window.currentCube = { ...window.nextCube, };
+  const nextCubeName = (window.currentCube.hotspot || {}).name || '';
+  window.nextCube = {
+    ...window.nextCube,
+    name: (window.currentCube.hotspot || {}).name || '',
+    hotspot: (tourData.metaInfo[nextCubeName] || {}).hotspot || {},
+    images: (tourData.metaInfo[nextCubeName] || {}).images || [],
+  };
+};
