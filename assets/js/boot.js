@@ -48,10 +48,7 @@ const handleHotspotClick = (event, { camera, scene, hotspot, }) => {
 
 function initApp() {
   // Create the basic elements for a 3-D scene.
-  const elements = createElements();
-  const camera = elements.camera;
-  const scene = elements.scene;
-  const renderer = elements.renderer;
+  const { camera, scene, renderer } = createElements();
 
   // Cube data which is to be used for creating current view
   const { hotspot: currentHotspot = {}, images: currentImages = [], } = window.currentCube || {};
