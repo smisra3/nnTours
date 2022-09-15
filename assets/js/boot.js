@@ -64,6 +64,16 @@ function initApp() {
     requestAnimationFrame(animate);
   };
   animate();
+
+  return {
+    camera,
+    scene,
+    renderer,
+    domEvents,
+    controls,
+    hotspot,
+    box,
+  };
 };
 
 function bootApp() {
@@ -89,3 +99,7 @@ function bootApp() {
 };
 
 bootApp();
+
+// Move the canvas element inside the nested div.
+const canvas = document.getElementsByTagName('canvas')[0];
+document.getElementById('demo').appendChild(canvas);

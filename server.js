@@ -62,6 +62,10 @@ const options = {
 let currentTourName = '';
 let currentRoomType = '';
 
+app.get('/edit/tour/:tourName', (req, res) => {
+  res.sendFile('/canvases/editTour.html', options);
+});
+
 app.get('/start/tour/:tourName', (req, res) => {
   res.sendFile('/canvases/tour.html', options);
 });

@@ -24,7 +24,8 @@ const openEditor = () => {
   submit.onclick = async e => {
     const name = document.getElementById('linkTo').value;
     const res = await fetch(`/hotspot?roomName=${roomName}&x=${window.dropPosition.x}&y=${window.dropPosition.y}&name=${name}&tourName=${window.__tourData__.tourName}`);
-    navigator.clipboard.writeText(`http://localhost:5500/start/tour/${window.__tourData__.tourName}`);
+    // navigator.clipboard.writeText(`http://localhost:5500/start/tour/${window.__tourData__.tourName}`);
+    navigator.clipboard.writeText(`http://localhost:5500/edit/tour/${window.__tourData__.tourName}`);
     alert('URL to tour copied to clipboard');
     closeModal();
   };
