@@ -10,6 +10,12 @@ const { tourData = {}, } = window;
 window.currentCube = {};
 window.nextCube = {};
 
+// Update the config after changing the position of the hotspot.
+const updateConfig = ({ x, y, z, } = {}) => {
+  const { currentCube = {}, } = window;
+  return fetch(`/hotspot/?roomName=${currentCube.name}&tourName=${window.tourData.tourName}&x=${x}&y=${y}&z=${z}&name=${currentCube.hotspot.name}`);
+};
+
 const handleHotspotClick = (event, { camera, scene, hotspot, }) => {
   let finalBox;
   const { point = {}, } = event.intersect || {};
@@ -35,6 +41,17 @@ const handleHotspotClick = (event, { camera, scene, hotspot, }) => {
   });
 };
 
+const handleCubeDBLClick = async (event, { camera, hotspot, screen, } = {}) => {
+  // on DBL click, move hotspot to desired location, and then update json for tour on the server also.
+  event.stopPropagation();
+  let { x, y, z } = ((event.intersect || {}).point || {}) || {};
+  if (x < 0) x += 100;
+  if (y < 0) y += 100;
+  if (z < 0) z += 100;
+  hotspot.position.set(x, y, z);
+  await updateConfig({ x, y, z, });
+};
+
 function initApp() {
   // Create the basic elements for a 3-D scene.
   const { camera, scene, renderer } = createElements();
@@ -56,6 +73,8 @@ function initApp() {
 
   // Tour Start images uploaded here
   const box = createMesh({ images: currentImages, });
+  domEvents.addEventListener(box, 'dblclick', event => handleCubeDBLClick(event, { camera, scene, hotspot, }));
+
 
   scene.add(hotspot);
   scene.add(box);

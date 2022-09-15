@@ -39,6 +39,7 @@ const updateConfig = ({
     obj.metaInfo[hotspot.roomName].hotspot = {
       x: hotspot.x,
       y: hotspot.y,
+      z: hotspot.z,
       name: hotspot.name,
     }
   }
@@ -76,9 +77,9 @@ app.get('/tour/:tourName', (req, res) => {
 });
 
 app.get('/hotspot', (req, res) => {
-  const { roomName, tourName, x, y, name } = req.query;
+  const { roomName, tourName, x, y, z, name } = req.query;
   var dir = `./assets/images/${tourName}/config.json`;
-  updateConfig({ dir, hotspot: { x, y, name, roomName, tourName, } });
+  updateConfig({ dir, hotspot: { x, y, z, name, roomName, tourName, } });
   res.send('ok');
 });
 

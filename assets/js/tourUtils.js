@@ -11,10 +11,7 @@ window.createHotspot = ({
       side: THREE.BackSide,
     }),
   );
-  const xpos = -2000 + 100;
-  const ypos = 1351.4196584763467;
-  const zpos = -1000;
-  hotspot.position.set(xpos || position.x, ypos || position.y, zpos || position.z);
+  hotspot.position.set(position.x, position.y, position.z);
   return hotspot;
 };
 
