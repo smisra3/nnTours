@@ -16,6 +16,11 @@ const updateConfig = ({ x, y, z, } = {}) => {
   return fetch(`/hotspot/?roomName=${currentCube.name}&tourName=${window.tourData.tourName}&x=${x}&y=${y}&z=${z}&name=${currentCube.hotspot.name}`);
 };
 
+const updateHotspotPosition = ({ hotspot, } ={}) => {
+  let { x, y, z, } = { ...window.currentCube.hotspot, };
+  hotspot.position.set(x, y, z);
+};
+
 const handleHotspotClick = (event, { camera, scene, hotspot, }) => {
   let finalBox;
   const { point = {}, } = event.intersect || {};
@@ -35,6 +40,7 @@ const handleHotspotClick = (event, { camera, scene, hotspot, }) => {
     },
     onComplete: () => {
       window.updateCurrentAndNextCubes();
+      updateHotspotPosition({ hotspot });
       gsap.to('canvas', { ...progressUpdateHandler.finish.params });
       scene.add(finalBox);
     },
@@ -92,6 +98,7 @@ function initApp() {
     controls,
     hotspot,
     box,
+    animate,
   };
 };
 
