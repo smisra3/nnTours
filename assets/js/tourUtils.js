@@ -1,11 +1,11 @@
 window.createHotspot = ({
   color = '0xffffff',
   position = { x: -999.999999999999, y: 0, z: 0, },
-  geometry,
+  geometry = new THREE.SphereBufferGeometry(100, 100, 100),
   scene,
 } = {}) => {
   const hotspot = new THREE.Mesh(
-    geometry || new THREE.SphereBufferGeometry(100, 100, 100),
+    geometry,
     new THREE.MeshBasicMaterial({
       color,
       side: THREE.BackSide,
