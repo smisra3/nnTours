@@ -4,6 +4,7 @@ const progressUpdateHandler = {
   finish: { params: { delay: 0.3, opacity: 1, duration: 0.4, ease: Sine.easeInOut, }, },
 };
 const { tourData = {}, } = window;
+const dragEvents = ['dragstart', 'drag', 'dragend', 'hoveron', 'hoveroff'];
 
 // At the boot time, currentCube will contain the value of entry point of the app. After that, as user will
 // navigate to other cubes, and currentCube value will be updated accordingly.
@@ -22,6 +23,7 @@ const updateHotspotPosition = ({ hotspot, } ={}) => {
 };
 
 const handleHotspotClick = (event, { camera, scene, hotspot, }) => {
+  if (dragEvents.includes(event.type)) return true;
   let finalBox;
   const { point = {}, } = event.intersect || {};
   let tweenOutside = gsap.to(camera.position, {
@@ -73,6 +75,13 @@ function initApp() {
 
   // creating the hotspot. You can pass in the custom geometry else it will use a default white sphere.
   const hotspot = createHotspot({ scene, position: { x: currentHotspot.x, y: currentHotspot.y, z: currentHotspot.z || 0, } });
+  
+  // Adding the drag control for hotspot, but click event is also fired when dragend is triggered, making the functionality buggy
+  // window.createNewDragControl({
+  //   elements: [hotspot], camera, renderer,
+  //   onDragStart: () => ({}),
+  //   onDragEnd: () => ({}),
+  // });
 
   // Adding the click handler for hotspot
   domEvents.addEventListener(hotspot, 'click', event => handleHotspotClick(event, { camera, scene, hotspot, }));

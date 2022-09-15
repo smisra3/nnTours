@@ -39,6 +39,18 @@ window.initCamera = ({
   return camera;
 };
 
+window.createNewDragControl = ({
+  elements = [],
+  camera,
+  renderer,
+  onDragStart = () => ({}),
+  onDragEnd = () => ({}),
+}) => {
+  const dragControls = new window.DragControls(elements, camera, renderer.domElement);
+  dragControls.addEventListener('dragstart', onDragStart);
+  dragControls.addEventListener('dragend', onDragEnd);
+};
+
 window.createElements = () => {
   const scene = new THREE.Scene;
   const camera = initCamera();
