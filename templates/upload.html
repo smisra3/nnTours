@@ -100,7 +100,6 @@
 
     label {
       margin-top: 100px;
-      margin-right: 20px;
       margin-left: -54px;
     }
 
@@ -141,8 +140,13 @@
 
     .room-type {
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 25px;
       display: flex;
+      justify-content: center;
+    }
+
+    .room-type span {
+      margin-right: 20px;
     }
 
     #tour-images {
@@ -174,10 +178,10 @@
           <option>Entrance</option>
         </select>
       </div>
-      <div style="margin: 20px 0">
-        <label for="upload">Select File: </label>
+      <div style="margin: 20px 0; padding-left: 132px;">
+        <label for="upload">Select room photos: </label>
         <input multiple id="upload" type="file" />
-        <label style="display: block; margin-top: 20px;">
+        <label style="display: block; margin-top: 20px; margin-left: -141px;">
           <input type="checkbox" id="default" />
           <span>Start my tour from the above selected room</span>
         </label>
@@ -187,7 +191,7 @@
   </div>
 
   <!-- to be removed later -->
-  <button onclick="fetchImages()">Fetch current tour images</button>
+  <!-- <button onclick="fetchImages()">Fetch current tour images</button> -->
 
   <!-- Div to show current tour images for editing -->
   <div id="tour-images">
