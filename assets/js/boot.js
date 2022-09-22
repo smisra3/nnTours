@@ -76,11 +76,13 @@ function initApp() {
   // creating the hotspot. You can pass in the custom geometry else it will use a default white sphere.
   const hotspot = createHotspot({ scene, position: { x: currentHotspot.x, y: currentHotspot.y, z: currentHotspot.z || 0, } });
   
-  // Adding the drag control for hotspot, but click event is also fired when dragend is triggered, making the functionality buggy
+  // Adding the drag control for hotspot, but click event is also fired when "dragend" is triggered, making the functionality buggy
   // window.createNewDragControl({
   //   elements: [hotspot], camera, renderer,
   //   onDragStart: () => ({}),
+  //   onDragStart: () => domEvents.removeEventListener(hotspot, 'click'),
   //   onDragEnd: () => ({}),
+  //   onDragEnd: () => setTimeout(() => domEvents.addEventListener(hotspot, 'click', e => handleHotspotClick(event, { camera, scene, hotspot, })), 1000),
   // });
 
   // Adding the click handler for hotspot
