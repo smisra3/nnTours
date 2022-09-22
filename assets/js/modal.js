@@ -17,18 +17,20 @@ const openEditor = () => {
 
   const input = document.createElement('input');
   input.id = 'linkTo';
-  input.placeholder = 'Enter the room name';
+  input.placeholder = 'Enter the room name to link this room to...';
+  input.style = 'margin-top: 20px;'
 
   const submit = document.createElement('button');
   submit.innerHTML = 'Submit';
   submit.onclick = async e => {
     const name = document.getElementById('linkTo').value;
-    const res = await fetch(`/hotspot?roomName=${roomName}&x=${window.dropPosition.x}&y=${window.dropPosition.y}&name=${name}&tourName=${window.__tourData__.tourName}`);
+    const res = await fetch(`/hotspot?roomName=${roomName}&x=${(window.dropPosition || {}).x}&y=${(window.dropPosition || {}).y}&name=${name}&tourName=${window.__tourData__.tourName}`);
     // navigator.clipboard.writeText(`http://localhost:5500/start/tour/${window.__tourData__.tourName}`);
     navigator.clipboard.writeText(`http://localhost:5500/edit/tour/${window.__tourData__.tourName}`);
     alert('URL to tour copied to clipboard');
     closeModal();
   };
+  submit.style = 'margin:20px;'
 
 
   const img = document.createElement('div');
@@ -66,7 +68,7 @@ const openEditor = () => {
   modalContent.append(h3);
   modalContent.append(img);
   modalContent.append(input);
-  modalContent.append(hotspotWrapper);
+  // modalContent.append(hotspotWrapper);
   modalContent.append(submit);
 };
 
